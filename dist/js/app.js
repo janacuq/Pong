@@ -81,6 +81,7 @@ function renderall() {
   context.clearRect(0, 0, 500, 300);
   drawPista();
   newBall.render();
+  newBall.move();
   Player.render();
   Player.move();
   Computer.render();
@@ -107,6 +108,35 @@ document.addEventListener('keydown', function(e) {
 window.addEventListener("keyup", function(e) {
   delete keysdown[e.keyCode];
 });
+
+//Ball movement
+Ball.prototype.move = function() {
+
+  this.x += this.x_speed;
+  this.y += this.y_speed;
+  //bounding the side walls
+  if (this.y + this.radius > (pista.height + 10) || this.y - this.radius < 10) {
+    this.y_speed = -this.y_speed;
+  }
+  //Machine & Player points
+  else if (this.x + this.radius > pista.width + 10) {
+    this.counterMachine += 1;
+    document.getElementById('scoreMachine').innerHTML = newBall.counterMachine;
+    newBall.serve();
+  } else if (this.x - this.radius < 10) {
+    this.counterPlayer += 1;
+    document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
+    newBall.serve();
+  //Paddle collision
+  } else if (this.x + this.radius >= (Player.x - Player.height) && this.y - this.radius >= Player.y && this.y + this.radius <= Player.y + Player.width) {
+
+    this.y_speed = -this.y_speed + Math.random() * 1.5;
+    this.x_speed = -this.x_speed + Math.random() * 2.5;
+  } else if (this.x - this.radius <= (Computer.x + Computer.height) && this.y + this.radius >= Computer.y && this.y + this.radius <= Computer.y + Computer.width) {
+    this.y_speed = -this.y_speed + Math.random() * 1.5;
+    this.x_speed = -this.x_speed + Math.random() * 2.5;  
+  }
+};
 
 
 var step = function() {
