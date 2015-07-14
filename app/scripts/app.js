@@ -85,6 +85,7 @@ function renderall() {
   Player.render();
   Player.move();
   Computer.render();
+  Computer.update();
 
 };
 
@@ -118,15 +119,17 @@ Ball.prototype.move = function() {
   if (this.y + this.radius > (pista.height + 10) || this.y - this.radius < 10) {
     this.y_speed = -this.y_speed;
   }
+    
   //Machine & Player points
   else if (this.x + this.radius > pista.width + 10) {
-    this.counterMachine += 1;
-    document.getElementById('scoreMachine').innerHTML = newBall.counterMachine;
+  //  this.counterMachine += 1;
+  //  document.getElementById('scoreMachine').innerHTML =                   //newBall.counterMachine;
     newBall.serve();
   } else if (this.x - this.radius < 10) {
-    this.counterPlayer += 1;
-    document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
+  //  this.counterPlayer += 1;
+  //  document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
     newBall.serve();
+      
   //Paddle collision
   } else if (this.x + this.radius >= (Player.x - Player.height) && this.y - this.radius >= Player.y && this.y + this.radius <= Player.y + Player.width) {
 
@@ -137,8 +140,23 @@ Ball.prototype.move = function() {
     this.x_speed = -this.x_speed + Math.random() * 2.5;  
   }
 };
+//Computer paddle
+Paddle.prototype.update = function() {
+  Computer.y = newBall.y - (Computer.width / 2);
+  if (Computer.y + Computer.width > pista.height) {
+    Computer.y = pista.height - Computer.width;
+  } else if (Computer.y < 12){
+    Computer.y = 12;
+  }
+};
 
-
+//Serving new ball
+Ball.prototype.serve = function(){
+  this.x = 50;
+  this.y = 255;
+  this.x += this.x_speed;
+  this.y += this.y_speed;  
+};
 var step = function() {
   renderall();
   animate(step);
