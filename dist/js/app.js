@@ -122,12 +122,12 @@ Ball.prototype.move = function() {
     
   //Machine & Player points
   else if (this.x + this.radius > pista.width + 10) {
-  //  this.counterMachine += 1;
-  //  document.getElementById('scoreMachine').innerHTML =                   //newBall.counterMachine;
+    this.counterMachine += 1;
+    document.getElementById('scoreMachine').innerHTML =                   newBall.counterMachine;
     newBall.serve();
   } else if (this.x - this.radius < 10) {
-  //  this.counterPlayer += 1;
-  //  document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
+    this.counterPlayer += 1;
+    document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
     newBall.serve();
       
   //Paddle collision
