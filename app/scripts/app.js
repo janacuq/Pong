@@ -93,6 +93,7 @@ function renderall() {
     Player.move();
     Computer.render();
     Computer.update();
+    mousemove();
 
 };
 
@@ -133,7 +134,7 @@ Ball.prototype.move = function () {
         if(this.counterMachine >= 11){
         document.getElementById('gameover').style.display = "block";
         document.getElementById('table').style.opacity = "0.3";
-        newBall.cancel(init);
+        
         }
         document.getElementById('scoreMachine').innerHTML = newBall.counterMachine;
         newBall.serve();
@@ -162,7 +163,7 @@ Ball.prototype.move = function () {
         this.y_speed = -this.y_speed + Math.random() + 1.2;
         this.x_speed = -this.x_speed + Math.random() + 0.5;
         
-        document.getElementById('color').style.backgroundColor = 'pink';
+        document.body.style.backgroundColor = 'pink';
        
     }
 };
@@ -194,6 +195,27 @@ var step = function () {
 }
 animate(step);
 
+// Add mousemove  to the canvas
+mouse = {};
+b_canvas.addEventListener("mousemove", trackPosition, true);
+
+function trackPosition(e) {
+	mouse.x = e.pageX;
+	mouse.y = e.pageY;
+}
+
+//update
+function mousemove() {
+if(mouse.x && mouse.y) {
+			Player.y = mouse.y - Player.width;
+    if (mouse.y >= pista.height + pista.margin) {
+        Player.y = pista.height - Player.width + pista.margin;
+    }
+    else if (Player.y <= pista.margin) {
+        Player.y = pista.margin;
+    }
+	}
+};
 
 window.cancelRequestAnimationFrame = ( function() {
 	return window.cancelAnimationFrame          ||

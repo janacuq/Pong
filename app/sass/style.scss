@@ -1,12 +1,14 @@
 #table {
   background-color: #E91E63;
-  margin-left: 30%;
+    width: 70%;
+   
 
 }
 
-#color {
+body {
     background-color: blue;
-    
+    text-align: center;
+    vertical-align: middle;
 
 }
 #gameover {
@@ -16,5 +18,11 @@
     margin-left: 30%;
     margin-top: 30%;
     color: white;
+
+}
+
+html {
+    height: 100%;
+    width: 100%;
 
 }
