@@ -1,3 +1,15 @@
+var animate =
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function(callback) {
+    window.setTimeout(callback, 1000 / 60)
+  };
+
+
+
 var b_canvas = document.getElementById("table");
 var context = b_canvas.getContext("2d");
 
@@ -65,3 +77,40 @@ var newBall = new Ball(50, 255, 8);
 var Player = new Paddle(475, 130, 6, 60);
 var Computer = new Paddle(20, 220, 6, 60);
 
+function renderall() {
+  context.clearRect(0, 0, 500, 300);
+  drawPista();
+  newBall.render();
+  Player.render();
+  Player.move();
+  Computer.render();
+
+};
+
+//arrows functionality
+Paddle.prototype.move = function(e) {
+  for(var key in keysdown)
+    var value = Number(key);
+  if (value == 38 && this.y >= 12) {
+    this.y -= this.speed;
+  }
+  if (value == 40 && this.y <= pista.height - this.width) {
+    this.y += this.speed;
+  }
+
+};
+keysdown = [];
+document.addEventListener('keydown', function(e) {
+ keysdown[e.keyCode] = true;
+});
+
+window.addEventListener("keyup", function(e) {
+  delete keysdown[e.keyCode];
+});
+
+
+var step = function() {
+  renderall();
+  animate(step);
+}
+animate(step);
