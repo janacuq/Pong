@@ -1,3 +1,14 @@
 #table {
   background-color: #E91E63;
   margin-left: 30%; }
+
+#color {
+  background-color: blue; }
+
+#gameover {
+  display: none;
+  position: absolute;
+  font-size: 30px;
+  margin-left: 30%;
+  margin-top: 30%;
+  color: white; }
