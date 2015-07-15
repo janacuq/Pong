@@ -5,21 +5,25 @@ var animate =
     window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
     function (callback) {
-       window.setTimeout(callback, 1000 / 60)
+        window.setTimeout(callback, 1000 / 60)
     };
 
 
-
+Array.prototype.random = function () {
+    return this[Math.floor((Math.random() * this.length))];
+}
 var b_canvas = document.getElementById("table");
 var context = b_canvas.getContext("2d");
 
 function drawPista() {
     context.beginPath();
     context.rect(10, 10, 480, 280);
-    if(!Player.collision){
-    context.fillStyle = 'rgba(255, 255, 0,0.5)';
+    if (!Player.collision) {
+
+        context.fillStyle = '#80cbc4';
     } else {
-      context.fillStyle = 'red'
+
+        context.fillStyle = '#ffcc80';
     }
     context.fill();
     context.lineWidth = 2;
@@ -53,10 +57,10 @@ function Paddle(x, y, height, width) {
 Paddle.prototype.render = function () {
     context.beginPath();
     context.rect(this.x, this.y, this.height, this.width);
-    context.fillStyle = '#E6EE9C';
+    context.fillStyle = 'rgba(255, 255, 255, 0.5)';
     context.fill();
     context.lineWidth = 2;
-    context.strokeStyle = '#AFB42B';
+    context.strokeStyle = 'white';
     context.stroke()
 }
 
@@ -64,8 +68,8 @@ function Ball(x, y, radius) {
     this.x = x;
     this.y = y;
     this.radius = radius;
-    this.x_speed = 2 * Math.random() + Math.random() * 6.2;
-    this.y_speed = 1 * Math.random() + 1 + Math.random() * 2.5;
+    this.x_speed = 5 * Math.random();
+    this.y_speed = 2 * Math.random();
     this.counterMachine = 0;
     this.counterPlayer = 0;
 };
@@ -73,10 +77,10 @@ function Ball(x, y, radius) {
 Ball.prototype.render = function () {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-    context.fillStyle = '#1DE9B6';
+    context.fillStyle = 'rgba(255, 255, 255, 0.5)';
     context.fill();
     context.lineWidth = 2;
-    context.strokeStyle = '#1DE9B6';
+    context.strokeStyle = 'white';
     context.stroke();
 };
 
@@ -131,12 +135,13 @@ Ball.prototype.move = function () {
     //Machine & Player points
     else if (this.x + this.radius > pista.width + pista.margin) {
         this.counterMachine += 1;
-        if(this.counterMachine >= 11){
-        document.getElementById('gameover').style.display = "block";
-        document.getElementById('table').style.opacity = "0.3";
-        
+        if (this.counterMachine >= 11) {
+            document.getElementById('gameover').style.display = "inline";
+            document.getElementById('table').style.opacity = "0.3";
+
+
         }
-        document.getElementById('scoreMachine').innerHTML = newBall.counterMachine;
+        document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
         newBall.serve();
     } else if (this.x - this.radius < 10) {
         this.counterPlayer += 1;
@@ -144,27 +149,28 @@ Ball.prototype.move = function () {
         newBall.serve();
 
         //Paddle collision
-    } else if (this.x + this.radius >= Player.x  && this.y - this.radius >= Player.y && this.y + this.radius <= Player.y + Player.width) {
-        
+    } else if (this.x + this.radius >= Player.x && this.y - this.radius >= Player.y && this.y + this.radius <= Player.y + Player.width) {
+
         //var distanceFromCenter = Math.abs(Player.y - this.y);
         //var maximumIncrease = 1;
         //var increase = 1+ (distanceFromCenter / (Player.width/2)) * maximumIncrease;
         //Increase = increase * (x/(y+1));
-        
+
         this.y_speed = -this.y_speed;
         //this.x_speed = -(this.x_speed * increase);
         this.x_speed = -this.x_speed;
-        if(!Player.collision) {
-        Player.collision = true;
+        if (!Player.collision) {
+            Player.collision = true;
         } else {
             Player.collision = false;
         }
     } else if (this.x - this.radius <= (Computer.x + Computer.height) && this.y + this.radius >= Computer.y && this.y + this.radius <= Computer.y + Computer.width) {
-        this.y_speed = -this.y_speed + Math.random() + 1.2;
-        this.x_speed = -this.x_speed + Math.random() + 0.5;
-        
-        document.body.style.backgroundColor = 'pink';
-       
+        this.y_speed = -this.y_speed;
+        this.x_speed = -this.x_speed + Math.random() * 1.3;
+        colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#f5f5f5', '#bcaaa4 '];
+        var x = Math.floor((Math.random() * 10) + 1);
+        document.body.style.backgroundColor = colors[x];
+
     }
 };
 
@@ -183,15 +189,18 @@ Paddle.prototype.update = function () {
 Ball.prototype.serve = function () {
     this.x = 50;
     this.y = 255;
-    this.x += this.x_speed;
-    this.y += this.y_speed;
+    this.x_speed = 3 + Math.random() * 1.3;
+    this.y_speed = -2 * Math.random();
+    colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#f5f5f5', '#bcaaa4 '];
+    var x = Math.floor((Math.random() * 10) + 1);
+    document.getElementById('table').style.backgroundColor = colors[x];
 };
 
 
 var init;
 var step = function () {
     renderall();
-     init =  animate(step);
+    init = animate(step);
 }
 animate(step);
 
@@ -200,28 +209,28 @@ mouse = {};
 b_canvas.addEventListener("mousemove", trackPosition, true);
 
 function trackPosition(e) {
-	mouse.x = e.pageX;
-	mouse.y = e.pageY;
+    mouse.x = e.pageX;
+    mouse.y = e.pageY;
 }
 
 //update
 function mousemove() {
-if(mouse.x && mouse.y) {
-			Player.y = mouse.y - Player.width;
-    if (mouse.y >= pista.height + pista.margin) {
-        Player.y = pista.height - Player.width + pista.margin;
+    if (mouse.x && mouse.y) {
+        Player.y = mouse.y - Player.width * 2;
+        if (Player.y >= pista.height - Player.width) {
+            Player.y = pista.height - Player.width + pista.margin;
+        } else if (Player.y <= pista.margin) {
+            Player.y = pista.margin;
+
+        }
     }
-    else if (Player.y <= pista.margin) {
-        Player.y = pista.margin;
-    }
-	}
 };
 
-window.cancelRequestAnimationFrame = ( function() {
-	return window.cancelAnimationFrame          ||
-		window.webkitCancelRequestAnimationFrame    ||
-		window.mozCancelRequestAnimationFrame       ||
-		window.oCancelRequestAnimationFrame     ||
-		window.msCancelRequestAnimationFrame        ||
-		clearTimeout
-} )();
+window.cancelRequestAnimationFrame = (function () {
+    return window.cancelAnimationFrame ||
+        window.webkitCancelRequestAnimationFrame ||
+        window.mozCancelRequestAnimationFrame ||
+        window.oCancelRequestAnimationFrame ||
+        window.msCancelRequestAnimationFrame ||
+        clearTimeout
+})();
