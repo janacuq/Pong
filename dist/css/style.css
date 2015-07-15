@@ -35,8 +35,9 @@ body {
   font-size: 6rem;
   margin-top: 10%;
   width: 70%; }
-  #gameover h2 {
-    font-size: 1rem; }
+  #gameover p {
+    font-size: 1rem;
+    cursor: pointer; }
 
 html {
   height: 100%;

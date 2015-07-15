@@ -9,9 +9,7 @@ var animate =
     };
 
 
-Array.prototype.random = function () {
-    return this[Math.floor((Math.random() * this.length))];
-}
+
 var b_canvas = document.getElementById("table");
 var context = b_canvas.getContext("2d");
 
@@ -60,16 +58,14 @@ Paddle.prototype.render = function () {
     context.fillStyle = 'rgba(255, 255, 255, 0.5)';
     context.fill();
     context.lineWidth = 2;
-    context.strokeStyle = 'white';
-    context.stroke()
 }
 
 function Ball(x, y, radius) {
     this.x = x;
     this.y = y;
     this.radius = radius;
-    this.x_speed = 5 * Math.random();
-    this.y_speed = 2 * Math.random();
+    this.x_speed = 3 + Math.random() * 1.8;
+    this.y_speed = -2 * Math.random() + 1;
     this.counterMachine = 0;
     this.counterPlayer = 0;
 };
@@ -80,8 +76,7 @@ Ball.prototype.render = function () {
     context.fillStyle = 'rgba(255, 255, 255, 0.5)';
     context.fill();
     context.lineWidth = 2;
-    context.strokeStyle = 'white';
-    context.stroke();
+
 };
 
 var newBall = new Ball(50, 255, 8);
@@ -135,30 +130,28 @@ Ball.prototype.move = function () {
     //Machine & Player points
     else if (this.x + this.radius > pista.width + pista.margin) {
         this.counterMachine += 1;
+         newBall.serve();
         if (this.counterMachine >= 11) {
             document.getElementById('gameover').style.display = "inline";
             document.getElementById('table').style.opacity = "0.3";
-
-
-        }
+            document.getElementById('scoreMachine').lastChild.textContent = 'Win!';
+            document.getElementById('points').innerText = 'New round?'
+        } else{
         document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
-        newBall.serve();
+        }
     } else if (this.x - this.radius < 10) {
         this.counterPlayer += 1;
         document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
         newBall.serve();
 
         //Paddle collision
-    } else if (this.x + this.radius >= Player.x && this.y - this.radius >= Player.y && this.y + this.radius <= Player.y + Player.width) {
+    } else if (this.x + this.radius >= Player.x && this.y - this.radius >= Player.y - 10 && this.y + this.radius <= Player.y + Player.width + 10) {
 
-        //var distanceFromCenter = Math.abs(Player.y - this.y);
-        //var maximumIncrease = 1;
-        //var increase = 1+ (distanceFromCenter / (Player.width/2)) * maximumIncrease;
-        //Increase = increase * (x/(y+1));
-
-        this.y_speed = -this.y_speed;
-        //this.x_speed = -(this.x_speed * increase);
+        var ref = Player.width / 2;
+        var difference = Math.abs(Player.y + ref - this.y);
+        this.y_speed = -this.y_speed + (1 + ((ref - difference) / ref));
         this.x_speed = -this.x_speed;
+        
         if (!Player.collision) {
             Player.collision = true;
         } else {
@@ -167,9 +160,9 @@ Ball.prototype.move = function () {
     } else if (this.x - this.radius <= (Computer.x + Computer.height) && this.y + this.radius >= Computer.y && this.y + this.radius <= Computer.y + Computer.width) {
         this.y_speed = -this.y_speed;
         this.x_speed = -this.x_speed + Math.random() * 1.3;
-        colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#f5f5f5', '#bcaaa4 '];
-        var x = Math.floor((Math.random() * 10) + 1);
-        document.body.style.backgroundColor = colors[x];
+        //Change background Color
+        var random_color = Math.floor((Math.random() * 9) + 1);
+        document.body.style.backgroundColor = colors[random_color];
 
     }
 };
@@ -189,14 +182,13 @@ Paddle.prototype.update = function () {
 Ball.prototype.serve = function () {
     this.x = 50;
     this.y = 255;
-    this.x_speed = 3 + Math.random() * 1.3;
-    this.y_speed = -2 * Math.random();
-    colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#f5f5f5', '#bcaaa4 '];
-    var x = Math.floor((Math.random() * 10) + 1);
-    document.getElementById('table').style.backgroundColor = colors[x];
+    this.x_speed = 3 + Math.random() * 1.8;
+    this.y_speed = -2 * Math.random() + 1;
+    var random_color = Math.floor((Math.random() * 9) + 1);
+    document.getElementById('table').style.backgroundColor = colors[random_color];
 };
 
-
+  var colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#bcaaa4 '];
 var init;
 var step = function () {
     renderall();
