@@ -8,14 +8,25 @@ var animate =
         window.setTimeout(callback, 1000 / 60)
     };
 
+//cancel animation
+window.cancelRequestAnimationFrame = (function () {
+    return window.cancelAnimationFrame ||
+        window.webkitCancelRequestAnimationFrame ||
+        window.mozCancelRequestAnimationFrame ||
+        window.oCancelRequestAnimationFrame ||
+        window.msCancelRequestAnimationFrame ||
+        clearTimeout
+})();
 
 
 var b_canvas = document.getElementById("table");
 var context = b_canvas.getContext("2d");
+var colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#bcaaa4 '];
 
-function drawPista() {
+function drawCourt() {
     context.beginPath();
     context.rect(10, 10, 480, 280);
+    //toogle background-color Court
     if (!Player.collision) {
 
         context.fillStyle = '#80cbc4';
@@ -37,12 +48,12 @@ function drawPista() {
 };
 
 
-var pista = {
+var Court = {
     width: 480,
     height: 280,
     margin: 10,
 };
-
+//Paddle and Ball constructors
 function Paddle(x, y, height, width) {
     this.x = x;
     this.y = y;
@@ -50,14 +61,6 @@ function Paddle(x, y, height, width) {
     this.width = width;
     this.speed = 7;
     this.collision = false;
-}
-
-Paddle.prototype.render = function () {
-    context.beginPath();
-    context.rect(this.x, this.y, this.height, this.width);
-    context.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    context.fill();
-    context.lineWidth = 2;
 }
 
 function Ball(x, y, radius) {
@@ -70,6 +73,33 @@ function Ball(x, y, radius) {
     this.counterPlayer = 0;
 };
 
+
+var newBall = new Ball(50, 255, 8);
+var Player = new Paddle(475, 130, 6, 60);
+var Computer = new Paddle(20, 220, 6, 60);
+
+
+
+//Paddle functions
+Paddle.prototype.render = function () {
+    context.beginPath();
+    context.rect(this.x, this.y, this.height, this.width);
+    context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    context.fill();
+    context.lineWidth = 2;
+};
+
+//Computer paddle
+Paddle.prototype.update = function () {
+    Computer.y = newBall.y - (Computer.width / 2);
+    if (Computer.y + Computer.width > Court.height + Court.margin) {
+        Computer.y = Court.height - Computer.width + Court.margin - 2;
+    } else if (Computer.y < Court.margin) {
+        Computer.y = Court.margin;
+    }
+};
+
+//Ball functions
 Ball.prototype.render = function () {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
@@ -79,60 +109,31 @@ Ball.prototype.render = function () {
 
 };
 
-var newBall = new Ball(50, 255, 8);
-var Player = new Paddle(475, 130, 6, 60);
-var Computer = new Paddle(20, 220, 6, 60);
-
-function renderall() {
-    context.clearRect(0, 0, 500, 300);
-    drawPista();
-    newBall.render();
-    newBall.move();
-    Player.render();
-    Player.move();
-    Computer.render();
-    Computer.update();
-    mousemove();
-
+//Serving new ball
+Ball.prototype.serve = function () {
+    this.x = 50;
+    this.y = 255;
+    this.x_speed = 3 + Math.random() * 1.8;
+    this.y_speed = -2 * Math.random() + 1;
+    var random_color = Math.floor((Math.random() * 9) + 1);
+    document.getElementById('table').style.backgroundColor = colors[random_color];
 };
-
-//arrows functionality
-Paddle.prototype.move = function (e) {
-    for (var key in keysdown)
-        var value = Number(key);
-    if (value == 38 && this.y >= pista.margin + 4) {
-        this.y -= this.speed;
-    }
-    if (value == 40 && this.y <= pista.height - this.width + pista.margin - 4) {
-        this.y += this.speed;
-    }
-
-};
-keysdown = [];
-document.addEventListener('keydown', function (e) {
-    keysdown[e.keyCode] = true;
-});
-
-window.addEventListener("keyup", function (e) {
-    delete keysdown[e.keyCode];
-});
 
 //Ball movement
 Ball.prototype.move = function () {
-
     this.x += this.x_speed;
     this.y += this.y_speed;
     //bounding the side walls
-    if (this.y + this.radius > (pista.height + pista.margin) || this.y - this.radius < pista.margin) {
+    if (this.y + this.radius > (Court.height + Court.margin) || this.y - this.radius < Court.margin) {
         this.y_speed = -this.y_speed;
     }
 
     //Machine & Player points
-    else if (this.x + this.radius > pista.width + pista.margin) {
+    else if (this.x + this.radius > Court.width + Court.margin) {
         this.counterMachine += 1;
         document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
         newBall.serve();
-        if (this.counterMachine >= 11) {
+        if (this.counterMachine >= 2) {
             document.getElementById('gameover').style.display = "inline";
             document.getElementById('table').style.opacity = "0.3";
             document.getElementById('scoreMachine').lastChild.textContent = '';
@@ -173,27 +174,20 @@ Ball.prototype.move = function () {
 };
 
 
-//Computer paddle
-Paddle.prototype.update = function () {
-    Computer.y = newBall.y - (Computer.width / 2);
-    if (Computer.y + Computer.width > pista.height + pista.margin) {
-        Computer.y = pista.height - Computer.width + pista.margin - 2;
-    } else if (Computer.y < pista.margin) {
-        Computer.y = pista.margin;
-    }
+//updating objects
+function renderall() {
+    context.clearRect(0, 0, 500, 300);
+    drawCourt();
+    newBall.render();
+    newBall.move();
+    Player.render();
+    Player.move();
+    Computer.render();
+    Computer.update();
+    mousemove();
+
 };
 
-//Serving new ball
-Ball.prototype.serve = function () {
-    this.x = 50;
-    this.y = 255;
-    this.x_speed = 3 + Math.random() * 1.8;
-    this.y_speed = -2 * Math.random() + 1;
-    var random_color = Math.floor((Math.random() * 9) + 1);
-    document.getElementById('table').style.backgroundColor = colors[random_color];
-};
-
-var colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#bcaaa4 '];
 
 var init;
 var step = function () {
@@ -202,23 +196,42 @@ var step = function () {
 }
 animate(step);
 
-// Add mousemove  to the canvas
+
+//arrows functionality
+Paddle.prototype.move = function (e) {
+    for (var key in keysdown)
+        var value = Number(key);
+    if (value == 38 && this.y >= Court.margin + 4) {
+        this.y -= this.speed;
+    }
+    if (value == 40 && this.y <= Court.height - this.width + Court.margin - 4) {
+        this.y += this.speed;
+    }
+
+};
+keysdown = [];
+document.addEventListener('keydown', function (e) {
+    keysdown[e.keyCode] = true;
+});
+
+window.addEventListener("keyup", function (e) {
+    delete keysdown[e.keyCode];
+});
+
+//mousemove
 mouse = {};
 b_canvas.addEventListener("mousemove", trackPosition, true);
 
 function trackPosition(e) {
-
     mouse.y = e.pageY;
 }
-
-//update
 function mousemove() {
     if (mouse.y) {
         Player.y = mouse.y - Player.width * 2;
-        if (Player.y >= pista.height - Player.width) {
-            Player.y = pista.height - Player.width + pista.margin;
-        } else if (Player.y <= pista.margin) {
-            Player.y = pista.margin;
+        if (Player.y >= Court.height - Player.width) {
+            Player.y = Court.height - Player.width + Court.margin;
+        } else if (Player.y <= Court.margin) {
+            Player.y = Court.margin;
 
         }
         mouse = {};
@@ -226,12 +239,3 @@ function mousemove() {
 };
 
 
-//cancel animation
-window.cancelRequestAnimationFrame = (function () {
-    return window.cancelAnimationFrame ||
-        window.webkitCancelRequestAnimationFrame ||
-        window.mozCancelRequestAnimationFrame ||
-        window.oCancelRequestAnimationFrame ||
-        window.msCancelRequestAnimationFrame ||
-        clearTimeout
-})();
