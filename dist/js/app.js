@@ -130,17 +130,20 @@ Ball.prototype.move = function () {
     //Machine & Player points
     else if (this.x + this.radius > pista.width + pista.margin) {
         this.counterMachine += 1;
-         newBall.serve();
+        newBall.serve();
         if (this.counterMachine >= 2) {
             document.getElementById('gameover').style.display = "inline";
             document.getElementById('table').style.opacity = "0.3";
             document.getElementById('scoreMachine').lastChild.textContent = '';
             document.getElementById('scorePlayer').lastChild.textContent = '';
             document.getElementById('points').innerHTML = '<div id="button">play new round</div>';
-           
-            cancelRequestAnimationFrame(init);
-        } else{
-        document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
+             var random_color = Math.floor((Math.random() * 9) + 1);
+    document.getElementById('button').style.color = colors[random_color];
+            document.getElementById('button').addEventListener("click", function (e) {
+                location.reload();
+            });
+        } else {
+            document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
         }
     } else if (this.x - this.radius < 10) {
         this.counterPlayer += 1;
@@ -154,7 +157,7 @@ Ball.prototype.move = function () {
         var difference = Math.abs(Player.y + ref - this.y);
         this.y_speed = -this.y_speed + (1 + ((ref - difference) / ref));
         this.x_speed = -this.x_speed;
-        
+
         if (!Player.collision) {
             Player.collision = true;
         } else {
@@ -191,7 +194,7 @@ Ball.prototype.serve = function () {
     document.getElementById('table').style.backgroundColor = colors[random_color];
 };
 
-  var colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#bcaaa4 '];
+var colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#bcaaa4 '];
 var init;
 var step = function () {
     renderall();
@@ -204,7 +207,7 @@ mouse = {};
 b_canvas.addEventListener("mousemove", trackPosition, true);
 
 function trackPosition(e) {
-  
+
     mouse.y = e.pageY;
 }
 
@@ -221,6 +224,8 @@ function mousemove() {
         mouse = {};
     }
 };
+
+
 
 window.cancelRequestAnimationFrame = (function () {
     return window.cancelAnimationFrame ||
