@@ -131,11 +131,14 @@ Ball.prototype.move = function () {
     else if (this.x + this.radius > pista.width + pista.margin) {
         this.counterMachine += 1;
          newBall.serve();
-        if (this.counterMachine >= 11) {
+        if (this.counterMachine >= 2) {
             document.getElementById('gameover').style.display = "inline";
             document.getElementById('table').style.opacity = "0.3";
-            document.getElementById('scoreMachine').lastChild.textContent = 'Win!';
-            document.getElementById('points').innerText = 'New round?'
+            document.getElementById('scoreMachine').lastChild.textContent = '';
+            document.getElementById('scorePlayer').lastChild.textContent = '';
+            document.getElementById('points').innerHTML = '<div id="button">play new round</div>';
+           
+            cancelRequestAnimationFrame(init);
         } else{
         document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
         }
@@ -201,13 +204,13 @@ mouse = {};
 b_canvas.addEventListener("mousemove", trackPosition, true);
 
 function trackPosition(e) {
-    mouse.x = e.pageX;
+  
     mouse.y = e.pageY;
 }
 
 //update
 function mousemove() {
-    if (mouse.x && mouse.y) {
+    if (mouse.y) {
         Player.y = mouse.y - Player.width * 2;
         if (Player.y >= pista.height - Player.width) {
             Player.y = pista.height - Player.width + pista.margin;
@@ -215,6 +218,7 @@ function mousemove() {
             Player.y = pista.margin;
 
         }
+        mouse = {};
     }
 };
 
