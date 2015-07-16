@@ -130,21 +130,20 @@ Ball.prototype.move = function () {
     //Machine & Player points
     else if (this.x + this.radius > pista.width + pista.margin) {
         this.counterMachine += 1;
+        document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
         newBall.serve();
-        if (this.counterMachine >= 2) {
+        if (this.counterMachine >= 11) {
             document.getElementById('gameover').style.display = "inline";
             document.getElementById('table').style.opacity = "0.3";
             document.getElementById('scoreMachine').lastChild.textContent = '';
             document.getElementById('scorePlayer').lastChild.textContent = '';
             document.getElementById('points').innerHTML = '<div id="button">play new round</div>';
-             var random_color = Math.floor((Math.random() * 9) + 1);
-    document.getElementById('button').style.color = colors[random_color];
+            //Play a new round
             document.getElementById('button').addEventListener("click", function (e) {
                 location.reload();
             });
-        } else {
-            document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
-        }
+            newBall.serve();
+        } 
     } else if (this.x - this.radius < 10) {
         this.counterPlayer += 1;
         document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
@@ -195,6 +194,7 @@ Ball.prototype.serve = function () {
 };
 
 var colors = ['#80cbc4', '#80deea', '#81d4fa', '#a5d6a7', '#c5e1a5', '#e6ee9c', '#ffcc80', '#f48fb1', '#ce93d8', '#ef9a9a', '#bcaaa4 '];
+
 var init;
 var step = function () {
     renderall();
@@ -226,7 +226,7 @@ function mousemove() {
 };
 
 
-
+//cancel animation
 window.cancelRequestAnimationFrame = (function () {
     return window.cancelAnimationFrame ||
         window.webkitCancelRequestAnimationFrame ||
