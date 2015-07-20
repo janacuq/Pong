@@ -43,7 +43,7 @@ Ball.prototype.move = function () {
         this.counterMachine += 1;
         document.getElementById('scoreMachine').lastChild.textContent = newBall.counterMachine;
         newBall.serve();
-        if (this.counterMachine >= 2) {
+        if (this.counterMachine >=11 || this.counterPlayer >=11) {
             document.getElementById('gameover').style.display = "inline";
             document.getElementById('table').style.opacity = "0.3";
             document.getElementById('scoreMachine').lastChild.textContent = '';
@@ -59,21 +59,22 @@ Ball.prototype.move = function () {
         this.counterPlayer += 1;
         document.getElementById('scorePlayer').innerHTML = newBall.counterPlayer;
         newBall.serve();
-
+         
         //Paddle collision
     } else if (this.x + this.radius >= Player.x && this.y - this.radius >= Player.y - 10 && this.y + this.radius <= Player.y + Player.width + 10) {
-
-        var ref = Player.width / 2;
-        var difference = Math.abs(Player.y + ref - this.y);
-        this.y_speed = -this.y_speed + (1 + ((ref - difference) / ref));
-        this.x_speed = -this.x_speed;
-
+      
+       var ref = Player.width / 2;
+       var difference = this.y + this.radius - (Player.y + ref);
+       this.y_speed = this.y_speed + (difference / ref * 4); 
+       this.x_speed = -this.x_speed;
+      
+      
         if (!Player.collision) {
             Player.collision = true;
         } else {
             Player.collision = false;
         }
-    } else if (this.x - this.radius <= (Computer.x + Computer.height) && this.y + this.radius >= Computer.y && this.y + this.radius <= Computer.y + Computer.width) {
+    } else if (this.x - this.radius <= (Computer.x + Computer.height) && this.y - this.radius >= Computer.y - 10 && this.y + this.radius <= Computer.y + Computer.width + 10) {
         this.y_speed = -this.y_speed;
         this.x_speed = -this.x_speed + Math.random() * 1.3;
         //Change background Color

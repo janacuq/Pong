@@ -53,45 +53,12 @@ var Court = {
     height: 280,
     margin: 10,
 };
-//Paddle and Ball constructors
-function Paddle(x, y, height, width) {
-    this.x = x;
-    this.y = y;
-    this.height = height;
-    this.width = width;
-    this.speed = 7;
-    this.collision = false;
-}
 
 
 
 var newBall = new Ball(50, 255, 8);
 var Player = new Paddle(475, 130, 6, 60);
 var Computer = new Paddle(20, 220, 6, 60);
-
-
-
-//Paddle functions
-Paddle.prototype.render = function () {
-    context.beginPath();
-    context.rect(this.x, this.y, this.height, this.width);
-    context.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    context.fill();
-    context.lineWidth = 2;
-};
-
-//Computer paddle
-Paddle.prototype.update = function () {
-    Computer.y = newBall.y - (Computer.width / 2);
-  // var diff = newBall.y - Computer.y
-  // if (diff > 10) diff = 10;
-  // Computer.y = Computer.y + diff;
-    if (Computer.y + Computer.width > Court.height + Court.margin) {
-        Computer.y = Court.height - Computer.width + Court.margin - 2;
-    } else if (Computer.y < Court.margin) {
-        Computer.y = Court.margin;
-    }
-};
 
 
 //updating objects

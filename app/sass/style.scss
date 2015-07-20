@@ -1,7 +1,7 @@
 html {
     height: 100%;
     width: 100%;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto';
     color: white;
 }
 body {
@@ -22,7 +22,7 @@ body {
         display: flex;
         flex-direction: row;
         justify-content: space-around;
-        font-size: 2rem;
+        font-size: 3rem;
         color: white;
         margin-top: 5%;
         margin-bottom: 5%;
@@ -52,30 +52,34 @@ body {
     }
 }
 //media queries
-@media screen and (max-width: 700px) {
-    body {
-        #gameover {
-            font-size: 3rem;
-        }
-        #line {
-            #button {
-                font-size: 0.5rem;
-            }
-        }
-    }
-}
 @media screen and (max-width: 320px) {
     body {
         #gameover {
             font-size: 1.5rem;
         }
         #line {
+          font-size: 1.5rem;
             #button {
                 font-size: 0.5rem;
             }
         }
     }
 }
+
+@media screen and (max-width: 700px) {
+    body {
+        #gameover {
+            font-size: 3rem;
+        }
+        #line {
+          font-size: 2rem;
+            #button {
+                font-size: 0.7rem;
+            }
+        }
+    }
+}
+
 @media screen and (min-width: 1500px) {
     body {
         #gameover {
