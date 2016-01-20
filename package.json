@@ -1,7 +1,10 @@
 {
-  "name": "base-frontend-project",
+  "name": "Pong",
   "version": "0.0.1",
-  "description": "Bloc skeleton project for a single page application",
+  "engines": {
+    "node": "0.12.5"
+  }
+  "description": "the classic Pong game coloured",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
